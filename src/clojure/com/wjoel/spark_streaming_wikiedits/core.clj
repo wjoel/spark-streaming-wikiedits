@@ -100,9 +100,9 @@
                        title
                        diff-url
                        user
-                       (try (java.lang.Long/parseLong byte-diff-str)
+                       (try (java.lang.Integer/parseInt byte-diff-str)
                             (catch Exception e
-                              0))
+                              (int 0)))
                        summary
                        (:minor? flags)
                        (:new? flags)
