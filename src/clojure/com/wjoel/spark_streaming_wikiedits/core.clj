@@ -3,7 +3,7 @@
   (:import [org.apache.spark.storage StorageLevel]
            [org.schwering.irc.lib
             IRCConnection
-            IRCEventListener
+            IRCEventAdapter
             IRCModeParser
             IRCUser]))
 
@@ -42,27 +42,9 @@
    [[storage-level] (->IRCReceiverState nick nil)]))
 
 (defn make-irc-events-listener [message-fn]
-  (reify
-    IRCEventListener
-    (onRegistered [this] nil)
-    (onDisconnected [this] nil)
-    (^void onError [this ^String error-message] nil)
-    (^void onError [this ^int error-num ^String error-message] nil)
-    (^void onInvite [this ^String chan ^IRCUser user ^String passive-nick] nil)
-    (^void onJoin [this ^String chan ^IRCUser user] nil)
-    (^void onKick [this ^String chan ^IRCUser user ^String passive-nick ^String kick-message] nil)
-    (^void onMode [this ^String chan ^IRCUser user ^IRCModeParser mode-parser] nil)
-    (^void onMode [this ^IRCUser user ^String passive-nick ^String mode] nil)
-    (^void onNick [this ^IRCUser user ^String new-nick] nil)
-    (^void onNotice [this ^String target ^IRCUser user ^String notice-message] nil)
-    (^void onPart [this ^String chan ^IRCUser user ^String part-message] nil)
-    (^void onPing [this ^String ping] nil)
-    (^void onPrivmsg [this ^String target ^IRCUser user ^String msg]
-      (message-fn msg))
-    (^void onQuit [this ^IRCUser user ^String quit-message] nil)
-    (^void onReply [this ^int num ^String value ^String msg] nil)
-    (^void onTopic [this ^String chan ^IRCUser user ^String topic] nil)
-    (^void unknown [this ^String prefix ^String command ^String middle ^String trailing] nil)))
+  (proxy [IRCEventAdapter] []
+    (onPrivmsg [target user msg]
+      (message-fn msg))))
 
 (def edit-event-regexp #"\[\[(.*)\]\]\s(.*)\s(.*)\s\*\s(.*)\s\*\s\(\+?(.\d*)\)\s(.*)")
 
@@ -116,7 +98,6 @@
 (defn connect-as [^com.wjoel.spark_streaming_wikiedits.core.WikipediaEditReceiver this nick]
   (if-let [conn (IRCConnection. wikimedia-irc-host (int-array [wikimedia-irc-port]) "" nick nick nick)]
     (.setConnection ^IRCReceiverState (.state this) (init-connection this conn))
-    ;(alter (.state this) assoc :conn ^{java.beans.Transient true} )
     (println "Failed to connect")))
 
 (defn receiver-onStart [^com.wjoel.spark_streaming_wikiedits.core.WikipediaEditReceiver this]
