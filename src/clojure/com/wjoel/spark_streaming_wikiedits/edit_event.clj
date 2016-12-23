@@ -2,8 +2,8 @@
   (:import [scala Product]))
 
 (definterface IWikipediaEditEvent
-  (^Integer getTimestamp [])
-  (^void setTimestamp [^Integer v])
+  (^Long getTimestamp [])
+  (^void setTimestamp [^Long v])
   (^String getChannel [])
   (^void setChannel [^String v])
   (^String getTitle [])
@@ -31,7 +31,7 @@
 
 (deftype WikipediaEditEvent
     [^{:volatile-mutable true
-       :tag java.lang.Integer} timestamp
+       :tag java.lang.Long} timestamp
      ^{:volatile-mutable true
        :tag java.lang.String} channel
      ^{:volatile-mutable true
