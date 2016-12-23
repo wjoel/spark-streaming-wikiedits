@@ -28,7 +28,8 @@
  :init init
  :state ^IRCReceiverState state
  :prefix "receiver-"
- :constructors {[org.apache.spark.storage.StorageLevel] [org.apache.spark.storage.StorageLevel]
+ :constructors {[] [org.apache.spark.storage.StorageLevel]
+                [org.apache.spark.storage.StorageLevel] [org.apache.spark.storage.StorageLevel]
                 [org.apache.spark.storage.StorageLevel String] [org.apache.spark.storage.StorageLevel]}
  :main false)
 
@@ -36,9 +37,11 @@
 (def wikimedia-irc-port 6667)
 
 (defn receiver-init
-  ([storage-level]
-   (receiver-init storage-level (str "spark-bot-" (+ 10000 (rand-int 8999)))))
-  ([^org.apache.spark.storage.StorageLevel storage-level ^String nick]
+  ([]
+   (receiver-init (str "spark-bot-" (+ 10000 (rand-int 8999))) (StorageLevel/MEMORY_AND_DISK)))
+  ([nick]
+   (receiver-init nick (StorageLevel/MEMORY_AND_DISK)))
+  ([nick storage-level]
    [[storage-level] (->IRCReceiverState nick nil)]))
 
 (defn make-irc-events-listener [message-fn]
