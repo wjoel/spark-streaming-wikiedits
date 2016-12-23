@@ -2,70 +2,36 @@
   (:import [scala Product]))
 
 (definterface IWikipediaEditEvent
+  (^Integer getTimestamp [])
+  (^void setTimestamp [^Integer v])
+  (^String getChannel [])
+  (^void setChannel [^String v])
   (^String getTitle [])
   (^void setTitle [^String v])
-  (^Long getByteDiff [])
-  (^void setByteDiff [^Long v]))
-
-;; (gen-class
-;;  :name WikipediaEditEvent
-;;  :extends [Product]
-;;  :implements [IWikipediaEditEvent]
-;;  :init init
-;;  :state state
-;;  :prefix "wiki-"
-;;  :constructors {[Long   ; timestamp
-;;                  String ; channel
-;;                  String ; title
-;;                  String ; diffUrl
-;;                  String ; user
-;;                  Long   ; byteDiff
-;;                  String ; Summary
-;;                  Boolean ; isMinor
-;;                  Boolean ; isNew
-;;                  Boolean ; isUnpatrolled
-;;                  Boolean ; isBotEdit
-;;                  Boolean ; isSpecial
-;;                  Boolean ; isTalk
-;;                  ] []})
-
-;; (defn wiki-init
-;;   [^Long timestamp
-;;    ^String channel
-;;    ^String title
-;;    ^String diffUrl
-;;    ^String user
-;;    ^Long byteDiff
-;;    ^String Summary
-;;    ^Boolean isMinor
-;;    ^Boolean isNew
-;;    ^Boolean isUnpatrolled
-;;    ^Boolean isBotEdit
-;;    ^Boolean isSpecial
-;;    ^Boolean isTalk]
-;;   [[] [^Long timestamp
-;;        ^String channel
-;;        ^String title
-;;        ^String diffUrl
-;;        ^String user
-;;        ^Long byteDiff
-;;        ^String Summary
-;;        ^Boolean isMinor
-;;        ^Boolean isNew
-;;        ^Boolean isUnpatrolled
-;;        ^Boolean isBotEdit
-;;        ^Boolean isSpecial
-;;        ^Boolean isTalk]])
-
-;; (defn wiki-productArity [this]
-;;   ^Integer (int (count (.state this))))
-
-;; (defn wiki-productElement [this ^Integer n]
-;;   (get (.state this) n))
+  (^String getDiffUrl [])
+  (^void setDiffUrl [^String v])
+  (^String getUser [])
+  (^void setUser [^String v])
+  (^Integer getByteDiff [])
+  (^void setByteDiff [^Integer v])
+  (^String getSummary [])
+  (^void setSummary [^String v])
+  (^Boolean getIsMinor [])
+  (^void setIsMinor [^Boolean v])
+  (^Boolean getIsNew [])
+  (^void setIsNew [^Boolean v])
+  (^Boolean getIsUnpatrolled [])
+  (^void setIsUnpatrolled [^Boolean v])
+  (^Boolean getIsBotEdit [])
+  (^void setIsBotEdit [^Boolean v])
+  (^Boolean getIsSpecial [])
+  (^void setIsSpecial [^Boolean v])
+  (^Boolean getIsTalk [])
+  (^void setIsTalk [^Boolean v]))
 
 (deftype WikipediaEditEvent
     [^{:volatile-mutable true
-       :tag java.lang.Long} timestamp
+       :tag java.lang.Integer} timestamp
      ^{:volatile-mutable true
        :tag java.lang.String} channel
      ^{:volatile-mutable true
@@ -75,7 +41,7 @@
      ^{:volatile-mutable true
        :tag java.lang.String} user
      ^{:volatile-mutable true
-       :tag java.lang.Long} byteDiff
+       :tag java.lang.Integer} byteDiff
      ^{:volatile-mutable true
        :tag java.lang.String} summary
      ^{:volatile-mutable true
@@ -91,13 +57,30 @@
      ^{:volatile-mutable true
        :tag java.lang.Boolean} isTalk]
   IWikipediaEditEvent
+  (getTimestamp [_] timestamp)
+  (setTimestamp [_ v] (set! timestamp v))
+  (getChannel [_] channel)
+  (setChannel [_ v] (set! channel v))
   (getTitle [_] title)
   (setTitle [_ v] (set! title v))
+  (getDiffUrl [_] diffUrl)
+  (setDiffUrl [_ v] (set! diffUrl v))
+  (getUser [_] user)
+  (setUser [_ v] (set! user v))
   (getByteDiff [_] byteDiff)
   (setByteDiff [_ v] (set! byteDiff v))
-  java.io.Serializable
-  scala.Product
-  (productArity [_] 12)
-  (productElement [_ n]
-    (get [timestamp channel title diffUrl user byteDiff summary
-          isMinor isNew isUnpatrolled isBotEdit isSpecial isTalk] n)))
+  (getSummary [_] summary)
+  (setSummary [_ v] (set! summary v))
+  (getIsMinor [_] isMinor)
+  (setIsMinor [_ v] (set! isMinor v))
+  (getIsNew [_] isNew)
+  (setIsNew [_ v] (set! isNew v))
+  (getIsUnpatrolled [_] isUnpatrolled)
+  (setIsUnpatrolled [_ v] (set! isUnpatrolled v))
+  (getIsBotEdit [_] isBotEdit)
+  (setIsBotEdit [_ v] (set! isBotEdit v))
+  (getIsSpecial [_] isSpecial)
+  (setIsSpecial [_ v] (set! isSpecial v))
+  (getIsTalk [_] isTalk)
+  (setIsTalk [_ v] (set! isTalk v))
+  java.io.Serializable)
