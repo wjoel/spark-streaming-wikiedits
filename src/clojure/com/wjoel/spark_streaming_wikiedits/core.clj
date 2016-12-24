@@ -76,7 +76,10 @@
         (fn [msg]
           (when-let [match (re-matches edit-event-regexp msg)]
             (let [[_ title flags diff-url user byte-diff-str summary] match
-                  flags (parse-flags flags)]
+                  flags (parse-flags flags)
+                  byte-diff (try (java.lang.Integer/parseInt byte-diff-str)
+                                 (catch Exception e
+                                   (int 0)))]
               (.store this
                       ^com.wjoel.spark_streaming_wikiedits.edit_event.WikipediaEditEvent
                       (ev/->WikipediaEditEvent
@@ -85,9 +88,7 @@
                        title
                        diff-url
                        user
-                       (try (java.lang.Integer/parseInt byte-diff-str)
-                            (catch Exception e
-                              (int 0)))
+                       byte-diff
                        summary
                        (:minor? flags)
                        (:new? flags)
