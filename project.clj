@@ -1,4 +1,4 @@
-(defproject com.wjoel/spark-streaming-wikiedits "0.1.0-SNAPSHOT"
+(defproject com.wjoel/spark-streaming-wikiedits "0.1.1-SNAPSHOT"
   :description "Spark Streaming receiver for Wikipedia edits"
   :url "https://github.com/wjoel/spark-streaming-wikiedits"
   :license {:name "MIT License"
