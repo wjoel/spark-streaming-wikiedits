@@ -81,8 +81,10 @@
                                  (catch Exception e
                                    (int 0)))]
               (.store this
-                      ^com.wjoel.spark_streaming_wikiedits.edit_event.WikipediaEditEvent
-                      (ev/->WikipediaEditEvent
+                      ^com.wjoel.spark_streaming_wikiedits.edit_event.EditGenClass
+                      ;^com.wjoel.spark_streaming_wikiedits.edit_event.WikipediaEditEvent
+                      (com.wjoel.spark_streaming_wikiedits.edit_event.EditGenClass.
+                       ;ev/->WikipediaEditEvent
                        (System/currentTimeMillis)
                        "#en.wikipedia"
                        title

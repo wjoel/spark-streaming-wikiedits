@@ -150,3 +150,107 @@
 ;;   (getIsTalk [_] isTalk)
 ;;   (setIsTalk [_ v] (set! isTalk v))
 ;;   java.io.Serializable)
+
+(gen-class
+ :name com.wjoel.spark_streaming_wikiedits.edit_event.EditGenClass
+ :implements [java.io.Serializable]
+ :init init
+ :state state
+ :prefix "edit-"
+ :constructors {[] []
+                [Long
+                 String
+                 String
+                 String
+                 String
+                 Integer
+                 String
+                 Boolean
+                 Boolean
+                 Boolean
+                 Boolean
+                 Boolean
+                 Boolean] []}
+ :methods [[getTimestamp [] Long]
+           [setTimestamp [Long] void]
+           [getChannel [] String]
+           [setChannel [String] void]
+           [getTitle [] String]
+           [setTitle [String] void]
+           [getDiffUrl [] String]
+           [setDiffUrl [String] void]
+           [getUser [] String]
+           [setUser [String] void]
+           [getByteDiff [] Integer]
+           [setByteDiff [Integer] void]
+           [getSummary [] String]
+           [setSummary [String] void]
+           [getIsMinor [] Boolean]
+           [setIsMinor [Boolean] void]
+           [getIsNew [] Boolean]
+           [setIsNew [Boolean] void]
+           [getIsUnpatrolled [] Boolean]
+           [setIsUnpatrolled [Boolean] void]
+           [getIsBotEdit [] Boolean]
+           [setIsBotEdit [Boolean] void]
+           [getIsSpecial [] Boolean]
+           [setIsSpecial [Boolean] void]
+           [getIsTalk [] Boolean]
+           [setIsTalk [Boolean] void]]
+ :main false)
+
+(defn edit-init
+  ([] (edit-init 0 nil nil nil nil 0 nil false false false false false false))
+  ([timestamp
+    channel
+    title
+    diffUrl
+    user
+    byteDiff
+    summary
+    isMinor
+    isNew
+    isUnpatrolled
+    isBotEdit
+    isSpecial
+    isTalk]
+   [[] (into-array Object [timestamp
+                           channel
+                           title
+                           diffUrl
+                           user
+                           byteDiff
+                           summary
+                           isMinor
+                           isNew
+                           isUnpatrolled
+                           isBotEdit
+                           isSpecial
+                           isTalk])]))
+
+(defn edit-getTimestamp [this] (aget (.state this) 0))
+(defn edit-setTimestamp [this v] (aset (.state this) 0 v))
+(defn edit-getChannel [this] (aget (.state this) 1))
+(defn edit-setChannel [this v] (aset (.state this) 1 v))
+(defn edit-getTitle [this] (aget (.state this) 2))
+(defn edit-setTitle [this v] (aset (.state this) 2 v))
+(defn edit-getDiffUrl [this] (aget (.state this) 3))
+(defn edit-setDiffUrl [this v] (aset (.state this) 3 v))
+(defn edit-getUser [this] (aget (.state this) 4))
+(defn edit-setUser [this v] (aset (.state this) 4 v))
+(defn edit-getByteDiff [this] (aget (.state this) 5))
+(defn edit-setByteDiff [this v] (aset (.state this) 5 v))
+(defn edit-getSummary [this] (aget (.state this) 6))
+(defn edit-setSummary [this v] (aset (.state this) 6 v))
+(defn edit-getIsMinor [this] (aget (.state this) 7))
+(defn edit-setIsMinor [this v] (aset (.state this) 7 v))
+(defn edit-getIsNew [this] (aget (.state this) 8))
+(defn edit-setIsNew [this v] (aset (.state this) 8 v))
+(defn edit-getIsUnpatrolled [this] (aget (.state this) 9))
+(defn edit-setIsUnpatrolled [this v] (aset (.state this) 9 v))
+(defn edit-getIsBotEdit [this] (aget (.state this) 10))
+(defn edit-setIsBotEdit [this v] (aset (.state this) 10 v))
+(defn edit-getIsSpecial [this] (aget (.state this) 11))
+(defn edit-setIsSpecial [this v] (aset (.state this) 11 v))
+(defn edit-getIsTalk [this] (aget (.state this) 12))
+(defn edit-setIsTalk [this v] (aset (.state this) 12 v))
