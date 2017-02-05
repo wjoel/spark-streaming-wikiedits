@@ -8,7 +8,8 @@
   :prep-tasks [["compile" "com.wjoel.spark-streaming-wikiedits.edit-event"] "javac" "compile"]
   :aot :all
   :dependencies [[org.clojure/clojure "1.8.0"]
-                 [org.scala-lang/scala-library "2.11.8"]
-                 [org.apache.spark/spark-core_2.11 "2.0.2"]
-                 [org.apache.spark/spark-streaming_2.11 "2.0.2"]
-                 [org.schwering/irclib "1.10"]])
+                 [org.scala-lang/scala-library "2.11.8" :scope "provided"]
+                 [org.apache.spark/spark-core_2.11 "2.0.2" :scope "provided"]
+                 [org.apache.spark/spark-streaming_2.11 "2.0.2" :scope "provided"]
+                 [org.schwering/irclib "1.10"]
+                 [com.wjoel/clj-bean "0.1.0"]])

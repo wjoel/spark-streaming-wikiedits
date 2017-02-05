@@ -24,13 +24,13 @@
 
 (gen-class
  :name com.wjoel.spark_streaming_wikiedits.core.WikipediaEditReceiver
- :extends com.wjoel.spark_streaming_wikiedits.AbstractWikieditsReceiver
+ :extends com.wjoel.spark_streaming_wikiedits.AbstractWikipediaEditReceiver
  :init init
  :state ^IRCReceiverState state
  :prefix "receiver-"
  :constructors {[] [org.apache.spark.storage.StorageLevel]
-                [org.apache.spark.storage.StorageLevel] [org.apache.spark.storage.StorageLevel]
-                [org.apache.spark.storage.StorageLevel String] [org.apache.spark.storage.StorageLevel]}
+                [String] [org.apache.spark.storage.StorageLevel]
+                [String org.apache.spark.storage.StorageLevel] [org.apache.spark.storage.StorageLevel]}
  :main false)
 
 (def wikimedia-irc-host "irc.wikimedia.org")
@@ -81,10 +81,8 @@
                                  (catch Exception e
                                    (int 0)))]
               (.store this
-                      ^com.wjoel.spark_streaming_wikiedits.edit_event.EditGenClass
-                      ;^com.wjoel.spark_streaming_wikiedits.edit_event.WikipediaEditEvent
-                      (com.wjoel.spark_streaming_wikiedits.edit_event.EditGenClass.
-                       ;ev/->WikipediaEditEvent
+                      ^com.wjoel.spark_streaming_wikiedits.edit_event.WikipediaEdit
+                      (com.wjoel.spark_streaming_wikiedits.edit_event.WikipediaEdit.
                        (System/currentTimeMillis)
                        "#en.wikipedia"
                        title
