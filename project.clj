@@ -12,4 +12,13 @@
                  [org.apache.spark/spark-core_2.11 "2.0.2" :scope "provided"]
                  [org.apache.spark/spark-streaming_2.11 "2.0.2" :scope "provided"]
                  [org.schwering/irclib "1.10"]
-                 [com.wjoel/clj-bean "0.1.0"]])
+                 [com.wjoel/clj-bean "0.1.0"]]
+  :deploy-repositories {"releases" {:url "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
+                                    :creds :gpg}
+                        "snapshots" {:url "https://oss.sonatype.org/content/repositories/snapshots/"
+                                     :creds :gpg}}
+  :scm {:url "git@github.com:wjoel/spark-streaming-wikiedits.git"}
+  :pom-addition [:developers [:developer
+                              [:name "Joel Wilsson"]
+                              [:url "https://wjoel.com"]
+                              [:email "joel.wilsson@gmail.com"]]])
