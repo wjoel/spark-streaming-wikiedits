@@ -1,7 +1,7 @@
-(ns com.wjoel.spark-streaming-wikiedits.edit-event
+(ns com.wjoel.spark.streaming.wikiedits.edit-event
   (:require [clj-bean.core :refer :all]))
 
-(defbean com.wjoel.spark_streaming_wikiedits.edit_event.WikipediaEdit
+(defbean com.wjoel.spark.streaming.wikiedits.WikipediaEditEvent
   [[Long timestamp]
    [String channel]
    [String title]

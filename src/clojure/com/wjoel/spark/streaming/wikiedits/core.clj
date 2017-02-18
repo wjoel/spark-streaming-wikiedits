@@ -1,5 +1,5 @@
-(ns com.wjoel.spark-streaming-wikiedits.core
-  (:require [com.wjoel.spark-streaming-wikiedits.edit-event :as ev])
+(ns com.wjoel.spark.streaming.wikiedits.core
+  (:require [com.wjoel.spark.streaming.wikiedits.edit-event :as ev])
   (:import [org.apache.spark.storage StorageLevel]
            [org.schwering.irc.lib
             IRCConnection
@@ -23,8 +23,8 @@
   java.io.Serializable)
 
 (gen-class
- :name com.wjoel.spark_streaming_wikiedits.core.WikipediaEditReceiver
- :extends com.wjoel.spark_streaming_wikiedits.AbstractWikipediaEditReceiver
+ :name com.wjoel.spark.streaming.wikiedits.WikipediaEditReceiver
+ :extends com.wjoel.spark.streaming.wikiedits.AbstractWikipediaEditReceiver
  :init init
  :state ^IRCReceiverState state
  :prefix "receiver-"
@@ -59,7 +59,7 @@
    :special? (.contains flags "Special:")
    :talk? (.contains flags "Talk:")})
 
-(defn init-connection [^com.wjoel.spark_streaming_wikiedits.core.WikipediaEditReceiver this
+(defn init-connection [^com.wjoel.spark.streaming.wikiedits.WikipediaEditReceiver this
                        ^IRCConnection conn]
   (doto conn
     (.setEncoding "UTF-8")
@@ -81,8 +81,8 @@
                                  (catch Exception e
                                    (int 0)))]
               (.store this
-                      ^com.wjoel.spark_streaming_wikiedits.edit_event.WikipediaEdit
-                      (com.wjoel.spark_streaming_wikiedits.edit_event.WikipediaEdit.
+                      ^com.wjoel.spark.streaming.wikiedits.WikipediaEditEvent
+                      (com.wjoel.spark.streaming.wikiedits.WikipediaEditEvent.
                        (System/currentTimeMillis)
                        "#en.wikipedia"
                        title
@@ -99,17 +99,17 @@
     (catch java.io.IOException e
       (println "Failed to connect: " e))))
 
-(defn connect-as [^com.wjoel.spark_streaming_wikiedits.core.WikipediaEditReceiver this nick]
+(defn connect-as [^com.wjoel.spark.streaming.wikiedits.WikipediaEditReceiver this nick]
   (if-let [conn (IRCConnection. wikimedia-irc-host (int-array [wikimedia-irc-port]) "" nick nick nick)]
     (.setConnection ^IRCReceiverState (.state this) (init-connection this conn))
     (println "Failed to connect")))
 
-(defn receiver-onStart [^com.wjoel.spark_streaming_wikiedits.core.WikipediaEditReceiver this]
+(defn receiver-onStart [^com.wjoel.spark.streaming.wikiedits.WikipediaEditReceiver this]
   (-> (Thread. (fn []
                  (connect-as this "foo-1239239292")))
       .start))
 
-(defn receiver-onStop [^com.wjoel.spark_streaming_wikiedits.core.WikipediaEditReceiver this]
+(defn receiver-onStop [^com.wjoel.spark.streaming.wikiedits.WikipediaEditReceiver this]
   (let [state ^IRCReceiverState (.state this)
         conn ^IRCConnection (.getConnection state)]
     (when (and conn (.isConnected conn))
@@ -118,7 +118,7 @@
         (.interrupt)
         (.join 3000)))))
 
-(defn receiver-receive [^com.wjoel.spark_streaming_wikiedits.core.WikipediaEditReceiver this]
+(defn receiver-receive [^com.wjoel.spark.streaming.wikiedits.WikipediaEditReceiver this]
   (when-let [conn ^IRCConnection (.getConnection ^IRCReceiverState (.state this))]
     (when (.isConnected conn)
       (.join conn))))
