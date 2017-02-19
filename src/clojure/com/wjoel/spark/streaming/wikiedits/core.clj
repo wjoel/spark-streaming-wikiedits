@@ -24,6 +24,7 @@
 
 (def wikimedia-irc-host "irc.wikimedia.org")
 (def wikimedia-irc-port 6667)
+(def wikimedia-channel "#en.wikipedia")
 
 (defn receiver-init
   ([]
@@ -76,7 +77,7 @@
   (try
     (doto conn
       (.connect)
-      (.send "JOIN #en.wikipedia")
+      (.send (str "JOIN " wikimedia-channel))
       (.addIRCEventListener
        (make-irc-events-listener
         (fn [msg]
@@ -99,6 +100,6 @@
   (let [conn ^IRCConnection (get-from-state this :connection)]
     (when (and conn (.isConnected conn))
       (doto conn
-        (.send "PART #en.wikipedia")
+        (.send (str "PART " wikimedia-channel))
         (.interrupt)
         (.join 3000)))))
