@@ -9,24 +9,13 @@
 
 (set! *warn-on-reflection* true)
 
-(definterface IIRCConnection
-  (getConnection [])
-  (setConnection [c]))
-
-(deftype IRCReceiverState
-    [^{:volatile-mutable true
-       java.beans.Transient true} conn
-     ^String nick]
-  IIRCConnection
-  (getConnection [_] conn)
-  (setConnection [this c] (set! conn c))
-  java.io.Serializable)
-
 (gen-class
  :name com.wjoel.spark.streaming.wikiedits.WikipediaEditReceiver
  :extends com.wjoel.spark.streaming.wikiedits.AbstractWikipediaEditReceiver
  :init init
- :state ^IRCReceiverState state
+ ;; while we would normally use an atom with a hash-map as state,
+ ;; atoms can not be serialized, so we use a java.util.HashMap instead.
+ :state state
  :prefix "receiver-"
  :constructors {[] [org.apache.spark.storage.StorageLevel]
                 [String] [org.apache.spark.storage.StorageLevel]
@@ -42,7 +31,11 @@
   ([nick]
    (receiver-init nick (StorageLevel/MEMORY_ONLY)))
   ([nick storage-level]
-   [[storage-level] (->IRCReceiverState nick nil)]))
+   [[storage-level] (doto (java.util.HashMap.)
+                      (.put :nick nick))]))
+
+(defn get-from-state [^com.wjoel.spark.streaming.wikiedits.WikipediaEditReceiver this key]
+  (.get ^java.util.HashMap (.state this) key))
 
 (defn make-irc-events-listener [message-fn]
   (proxy [IRCEventAdapter] []
@@ -101,24 +94,18 @@
 
 (defn connect-as [^com.wjoel.spark.streaming.wikiedits.WikipediaEditReceiver this nick]
   (if-let [conn (IRCConnection. wikimedia-irc-host (int-array [wikimedia-irc-port]) "" nick nick nick)]
-    (.setConnection ^IRCReceiverState (.state this) (init-connection this conn))
+    (.put ^java.util.HashMap (.state this)
+          "connection" (init-connection this conn))
     (println "Failed to connect")))
 
 (defn receiver-onStart [^com.wjoel.spark.streaming.wikiedits.WikipediaEditReceiver this]
-  (-> (Thread. (fn []
-                 (connect-as this "foo-1239239292")))
-      .start))
+  (.start (Thread. (fn []
+                     (connect-as this ^String (get-from-state this :nick))))))
 
 (defn receiver-onStop [^com.wjoel.spark.streaming.wikiedits.WikipediaEditReceiver this]
-  (let [state ^IRCReceiverState (.state this)
-        conn ^IRCConnection (.getConnection state)]
+  (let [conn ^IRCConnection (get-from-state this :connection)]
     (when (and conn (.isConnected conn))
       (doto conn
         (.send "PART #en.wikipedia")
         (.interrupt)
         (.join 3000)))))
-
-(defn receiver-receive [^com.wjoel.spark.streaming.wikiedits.WikipediaEditReceiver this]
-  (when-let [conn ^IRCConnection (.getConnection ^IRCReceiverState (.state this))]
-    (when (.isConnected conn)
-      (.join conn))))
