@@ -38,9 +38,9 @@
 
 (defn receiver-init
   ([]
-   (receiver-init (str "spark-bot-" (+ 10000 (rand-int 8999))) (StorageLevel/MEMORY_AND_DISK)))
+   (receiver-init (str "spark-bot-" (+ 10000 (rand-int 8999))) (StorageLevel/MEMORY_ONLY)))
   ([nick]
-   (receiver-init nick (StorageLevel/MEMORY_AND_DISK)))
+   (receiver-init nick (StorageLevel/MEMORY_ONLY)))
   ([nick storage-level]
    [[storage-level] (->IRCReceiverState nick nil)]))
 
