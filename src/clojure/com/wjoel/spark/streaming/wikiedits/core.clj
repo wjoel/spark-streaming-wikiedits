@@ -5,22 +5,21 @@
             IRCConnection
             IRCEventAdapter
             IRCModeParser
-            IRCUser]))
+            IRCUser])
+  (:gen-class
+   :name com.wjoel.spark.streaming.wikiedits.WikipediaEditReceiver
+   :extends com.wjoel.spark.streaming.wikiedits.AbstractWikipediaEditReceiver
+   :init init
+   ;; while we would normally use an atom with a hash-map as state,
+   ;; atoms can not be serialized, so we use a java.util.HashMap instead.
+   :state state
+   :prefix "receiver-"
+   :constructors {[] [org.apache.spark.storage.StorageLevel]
+                  [String] [org.apache.spark.storage.StorageLevel]
+                  [String org.apache.spark.storage.StorageLevel] [org.apache.spark.storage.StorageLevel]}
+   :main false))
 
 (set! *warn-on-reflection* true)
-
-(gen-class
- :name com.wjoel.spark.streaming.wikiedits.WikipediaEditReceiver
- :extends com.wjoel.spark.streaming.wikiedits.AbstractWikipediaEditReceiver
- :init init
- ;; while we would normally use an atom with a hash-map as state,
- ;; atoms can not be serialized, so we use a java.util.HashMap instead.
- :state state
- :prefix "receiver-"
- :constructors {[] [org.apache.spark.storage.StorageLevel]
-                [String] [org.apache.spark.storage.StorageLevel]
-                [String org.apache.spark.storage.StorageLevel] [org.apache.spark.storage.StorageLevel]}
- :main false)
 
 (def wikimedia-irc-host "irc.wikimedia.org")
 (def wikimedia-irc-port 6667)
