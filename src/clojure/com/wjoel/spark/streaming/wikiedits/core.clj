@@ -44,13 +44,26 @@
 
 (def edit-event-regexp #"\[\[(.*)\]\]\s(.*)\s(.*)\s\*\s(.*)\s\*\s\(\+?(.\d*)\)\s(.*)")
 
-(defn parse-flags [^String flags]
-  {:minor? (.contains flags "M")
-   :new? (.contains flags "N")
-   :unpatrolled? (.contains flags "!")
-   :bot-edit? (.contains flags "B")
-   :special? (.contains flags "Special:")
-   :talk? (.contains flags "Talk:")})
+(defn edit-event-message->edit-event [edit-event-message]
+  (when-let [match (re-matches edit-event-regexp edit-event-message)]
+    (let [[_ title ^String flags diff-url user byte-diff-str summary] match
+          byte-diff (try (java.lang.Integer/parseInt byte-diff-str)
+                         (catch Exception e
+                           (int 0)))]
+      (com.wjoel.spark.streaming.wikiedits.WikipediaEditEvent.
+       (System/currentTimeMillis)
+       "#en.wikipedia"
+       title
+       diff-url
+       user
+       byte-diff
+       summary
+       (.contains flags "M")
+       (.contains flags "N")
+       (.contains flags "!")
+       (.contains flags "B")
+       (.contains flags "Special:")
+       (.contains flags "Talk:")))))
 
 (defn init-connection [^com.wjoel.spark.streaming.wikiedits.WikipediaEditReceiver this
                        ^IRCConnection conn]
@@ -67,28 +80,8 @@
       (.addIRCEventListener
        (make-irc-events-listener
         (fn [msg]
-          (when-let [match (re-matches edit-event-regexp msg)]
-            (let [[_ title flags diff-url user byte-diff-str summary] match
-                  flags (parse-flags flags)
-                  byte-diff (try (java.lang.Integer/parseInt byte-diff-str)
-                                 (catch Exception e
-                                   (int 0)))]
-              (.store this
-                      ^com.wjoel.spark.streaming.wikiedits.WikipediaEditEvent
-                      (com.wjoel.spark.streaming.wikiedits.WikipediaEditEvent.
-                       (System/currentTimeMillis)
-                       "#en.wikipedia"
-                       title
-                       diff-url
-                       user
-                       byte-diff
-                       summary
-                       (:minor? flags)
-                       (:new? flags)
-                       (:unpatrolled? flags)
-                       (:bot-edit? flags)
-                       (:special? flags)
-                       (:talk? flags)))))))))
+          (when-let [edit-event (edit-event-message->edit-event msg)]
+            (.store this edit-event))))))
     (catch java.io.IOException e
       (println "Failed to connect: " e))))
 
