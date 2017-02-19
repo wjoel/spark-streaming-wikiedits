@@ -1,5 +1,6 @@
 (ns com.wjoel.spark.streaming.wikiedits.core
-  (:require [com.wjoel.spark.streaming.wikiedits.edit-event :as ev])
+  (:require [clojure.tools.logging :as log]
+            [com.wjoel.spark.streaming.wikiedits.edit-event :as ev])
   (:import [org.apache.spark.storage StorageLevel]
            [org.schwering.irc.lib
             IRCConnection
@@ -82,14 +83,14 @@
         (fn [msg]
           (when-let [edit-event (edit-event-message->edit-event msg)]
             (.store this edit-event))))))
-    (catch java.io.IOException e
-      (println "Failed to connect: " e))))
+    (catch java.io.IOException ex
+      (log/warn ex (str "Failed to connect to " wikimedia-irc-host ":" wikimedia-irc-port))
+      (throw ex))))
 
 (defn connect-as [^com.wjoel.spark.streaming.wikiedits.WikipediaEditReceiver this nick]
-  (if-let [conn (IRCConnection. wikimedia-irc-host (int-array [wikimedia-irc-port]) "" nick nick nick)]
+  (when-let [conn (IRCConnection. wikimedia-irc-host (int-array [wikimedia-irc-port]) "" nick nick nick)]
     (.put ^java.util.HashMap (.state this)
-          "connection" (init-connection this conn))
-    (println "Failed to connect")))
+          "connection" (init-connection this conn))))
 
 (defn receiver-onStart [^com.wjoel.spark.streaming.wikiedits.WikipediaEditReceiver this]
   (.start (Thread. (fn []
