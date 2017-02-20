@@ -2,8 +2,6 @@
 
 A Spark Streaming custom receiver for Wikipedia edits.
 
-Maven coordinates: `com.wjoel:spark-streaming-wikiedits:0.0.1`
-
 ## Usage
 
 ```scala
@@ -31,6 +29,6 @@ ssc.start()
 
 ## License
 
-Copyright © 2016 Joel Wilsson
+Copyright © 2017 Joel Wilsson
 
 Distributed under the MIT License.
