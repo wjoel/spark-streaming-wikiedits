@@ -9,9 +9,9 @@
    [String user]
    [Integer byteDiff]
    [String summary]
-   [Boolean isMinor]
-   [Boolean isNew]
-   [Boolean isUnPatrolled]
-   [Boolean isBotEdit]
-   [Boolean isSpecial]
-   [Boolean isTalk]])
+   [Boolean minor]
+   [Boolean new]
+   [Boolean unPatrolled]
+   [Boolean botEdit]
+   [Boolean special]
+   [Boolean talk]])

@@ -1,4 +1,4 @@
-(defproject com.wjoel/spark-streaming-wikiedits "0.1.2-SNAPSHOT"
+(defproject com.wjoel/spark-streaming-wikiedits "0.1.3"
   :description "Spark Streaming receiver for Wikipedia edits"
   :url "https://github.com/wjoel/spark-streaming-wikiedits"
   :license {:name "MIT License"
@@ -10,7 +10,7 @@
   :dependencies [[org.clojure/clojure "1.8.0"]
                  [org.clojure/tools.logging "0.3.1"]
                  [org.schwering/irclib "1.10"]
-                 [com.wjoel/clj-bean "0.1.0"]]
+                 [com.wjoel/clj-bean "0.2.0"]]
   :profiles {:provided {:dependencies [[org.scala-lang/scala-library "2.11.8"]
                                        [org.apache.spark/spark-core_2.11 "2.0.2"]
                                        [org.apache.spark/spark-streaming_2.11 "2.0.2"]]}}
