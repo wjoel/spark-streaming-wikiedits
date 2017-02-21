@@ -3,7 +3,7 @@
   :url "https://github.com/wjoel/spark-streaming-wikiedits"
   :license {:name "MIT License"
             :url "http://www.opensource.org/licenses/mit-license.php"}
-  :source-paths ["src" "src/clojure"]
+  :source-paths ["src/clojure"]
   :java-source-paths ["src/java"]
   :prep-tasks [["compile" "com.wjoel.spark.streaming.wikiedits.edit-event"] "javac" "compile"]
   :aot :all
@@ -19,6 +19,10 @@
                         "snapshots" {:url "https://oss.sonatype.org/content/repositories/snapshots/"
                                      :creds :gpg}}
   :scm {:url "git@github.com:wjoel/spark-streaming-wikiedits.git"}
+  :classifiers {:javadoc {:source-paths ^:replace []
+                          :java-source-paths ^:replace []
+                          :prep-tasks ^:replace []}
+                :sources {:prep-tasks ^:replace []}}
   :pom-addition [:developers [:developer
                               [:name "Joel Wilsson"]
                               [:url "https://wjoel.com"]
